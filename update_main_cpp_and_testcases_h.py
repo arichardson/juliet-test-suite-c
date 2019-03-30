@@ -19,17 +19,16 @@ def build_list_of_primary_c_cpp_testcase_files(directory, testcaseregexes):
 	files_to_check = []
 	for root, dirs, files in os.walk(directory):
 		for name in files:
-		    # if there are multiple files, we only want the "a" (or primary) one since that had the good and bad defined in it.  
+			# if there are multiple files, we only want the "a" (or primary) one since that had the good and bad defined in it.
 			# In the C++ class related issues, we want only the bad since all we need is the namespace and both good and bad will be in the same namespace. (and we don't want to end up calling the good and bad more than once). 
 			result = re.search(py_common.get_primary_testcase_filename_regex(), name, re.IGNORECASE)
-
 			if result != None:
-                                if testcaseregexes == None:
-                                        files_to_check.append(os.path.realpath(os.path.join(root,name)))
-                                else:
-                                        for testcaseregex in testcaseregexes:
-                                                if re.match('.*' + testcaseregex +'.*', name):
-                                                        files_to_check.append(os.path.realpath(os.path.join(root,name)))
+				if testcaseregexes == None:
+					files_to_check.append(os.path.realpath(os.path.join(root,name)))
+				else:
+					for testcaseregex in testcaseregexes:
+						if re.match('.*' + testcaseregex +'.*', name):
+							files_to_check.append(os.path.realpath(os.path.join(root,name)))
 			else:
 				pass
 				
