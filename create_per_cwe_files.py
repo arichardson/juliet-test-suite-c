@@ -1,4 +1,4 @@
-#! /usr/bin/env/python 3.0
+#!/usr/bin/env python3
 #
 # Running this script will update the batch and make files that compile the test cases
 # for each CWE into a separate .exe or executable file.  This script also edits source code

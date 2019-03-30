@@ -1,4 +1,4 @@
-#! /usr/bin/env/python 3.0
+#!/usr/bin/env python3
 #
 # Modifies main.cpp and testcases.h to call all the test cases.
 # Modified main_linux.cpp to call the non w32 test cases.

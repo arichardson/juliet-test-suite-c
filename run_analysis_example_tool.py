@@ -1,4 +1,4 @@
-#! /usr/bin/env/python 3.1
+#!/usr/bin/env python3
 #
 # Script that runs each bat file in each CWE directory.
 # The bat files contain instructions for compiling the test cases

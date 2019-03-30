@@ -1,4 +1,4 @@
-#! /usr/bin/env/python 3.0
+#!/usr/bin/env python3
 #
 # Contains common functions necessary for various python testcase scripts.
 #
