@@ -5,6 +5,7 @@
 # and header files needed for a successful compilation with these files.
 #
 #
+import argparse
 import os, glob, shutil, time, sys
 
 # add parent directory to search path so we can use py_common
@@ -175,22 +176,16 @@ if __name__ == "__main__":
 		exit()
 
 	# default values which are used if no arguments are passed on command line
-	cwe_regex = "CWE"
-	use_debug = False
-
-	if len(sys.argv) > 1:
-
-		if ((sys.argv[1] == '-h') or (len(sys.argv) > 3)):
-			help()
-			exit()
-
-		if len(sys.argv) == 2:
-			cwe_regex = sys.argv[1]
-
-		if len(sys.argv) == 3:
-			cwe_regex = sys.argv[1]
-			use_debug = (sys.argv[2] == "True")
-
+	parser = argparse.ArgumentParser()
+	parser.add_argument("--makefiles-only", action="store_true", default=True)
+	parser.add_argument("--no-makefiles-only", dest="makefiles_only", action="store_false")
+	parser.add_argument("cwe_regex", type=str, nargs=argparse.OPTIONAL, default="CWE")
+	parser.add_argument("use_debug", type=lambda x: x == "True", nargs=argparse.OPTIONAL, default=False)
+	args = parser.parse_args()
+	cwe_regex = args.cwe_regex
+	use_debug = args.use_debug
+	makefiles_only = args.makefiles_only
+	print(args)
 	# get the CWE directories in testcases folder
 	cwe_dirs = py_common.find_directories_in_dir("testcases", cwe_regex)
 
@@ -208,15 +203,17 @@ if __name__ == "__main__":
 			cwe_sub_dirs = py_common.find_directories_in_dir(dir, "^s\d.*")
 
 			for sub_dir in cwe_sub_dirs:
-				# copy main.cpp and testcases.h into this testcase dir
-				shutil.copy("testcasesupport/main.cpp", sub_dir)
-				shutil.copy("testcasesupport/testcases.h", sub_dir)
+				if not makefiles_only:
+					# copy main.cpp and testcases.h into this testcase dir
+					shutil.copy("testcasesupport/main.cpp", sub_dir)
+					shutil.copy("testcasesupport/testcases.h", sub_dir)
 
 				# update main.cpp/testcases.h to call only this functional variant's testcases
 				testcase_files = update_main_cpp_and_testcases_h.build_list_of_primary_c_cpp_testcase_files(sub_dir, None)
-				fcl = update_main_cpp_and_testcases_h.generate_calls_to_fxs(testcase_files)
-				update_main_cpp_and_testcases_h.update_main_cpp(sub_dir, "main.cpp", fcl)
-				update_main_cpp_and_testcases_h.update_testcases_h(sub_dir, "testcases.h", fcl)
+				if not makefiles_only:
+					fcl = update_main_cpp_and_testcases_h.generate_calls_to_fxs(testcase_files)
+					update_main_cpp_and_testcases_h.update_main_cpp(sub_dir, "main.cpp", fcl)
+					update_main_cpp_and_testcases_h.update_testcases_h(sub_dir, "testcases.h", fcl)
 
 				# get the CWE number from the directory name (not the full path since that may also have the string CWE in it)
 				this_cwe_dir = os.path.basename(dir)
@@ -247,10 +244,10 @@ if __name__ == "__main__":
 
 				# only generate main_linux.cpp and Makefile if there are Linux test cases for this CWE
 				if linux_testcase_exists:
-					shutil.copy("testcasesupport/main_linux.cpp", sub_dir);
-
-					linux_fcl = update_main_cpp_and_testcases_h.generate_calls_to_linux_fxs(testcase_files)
-					update_main_cpp_and_testcases_h.update_main_cpp(sub_dir, "main_linux.cpp", linux_fcl)
+					if not makefiles_only:
+						shutil.copy("testcasesupport/main_linux.cpp", sub_dir);
+						linux_fcl = update_main_cpp_and_testcases_h.generate_calls_to_linux_fxs(testcase_files)
+						update_main_cpp_and_testcases_h.update_main_cpp(sub_dir, "main_linux.cpp", linux_fcl)
 					# no need to update testcases.h
 
 					makefile_contents = create_makefile(cwe, is_dir_split)
@@ -260,15 +257,17 @@ if __name__ == "__main__":
 					py_common.print_with_timestamp("No Makefile created for " + cwe + ". All of the test cases are Windows-specific.")
 
 		else:
-			# copy main.cpp and testcases.h into this testcase dir
-			shutil.copy("testcasesupport/main.cpp", dir)
-			shutil.copy("testcasesupport/testcases.h", dir)
+			if not makefiles_only:
+				# copy main.cpp and testcases.h into this testcase dir
+				shutil.copy("testcasesupport/main.cpp", dir)
+				shutil.copy("testcasesupport/testcases.h", dir)
 
 			# update main.cpp/testcases.h to call only this cwe's testcases
 			testcase_files = update_main_cpp_and_testcases_h.build_list_of_primary_c_cpp_testcase_files(dir, None)
-			fcl = update_main_cpp_and_testcases_h.generate_calls_to_fxs(testcase_files)
-			update_main_cpp_and_testcases_h.update_main_cpp(dir, "main.cpp", fcl)
-			update_main_cpp_and_testcases_h.update_testcases_h(dir, "testcases.h", fcl)
+			if not makefiles_only:
+				fcl = update_main_cpp_and_testcases_h.generate_calls_to_fxs(testcase_files)
+				update_main_cpp_and_testcases_h.update_main_cpp(dir, "main.cpp", fcl)
+				update_main_cpp_and_testcases_h.update_testcases_h(dir, "testcases.h", fcl)
 
 			# get the CWE number from the directory name (not the full path since that may also have the string CWE in it)
 			thisdir = os.path.basename(dir)
@@ -297,10 +296,10 @@ if __name__ == "__main__":
 
 			# only generate main_linux.cpp and Makefile if there are Linux test cases for this CWE
 			if linux_testcase_exists:
-				shutil.copy("testcasesupport/main_linux.cpp", dir);
-
-				linux_fcl = update_main_cpp_and_testcases_h.generate_calls_to_linux_fxs(testcase_files)
-				update_main_cpp_and_testcases_h.update_main_cpp(dir, "main_linux.cpp", linux_fcl)
+				if not makefiles_only:
+					shutil.copy("testcasesupport/main_linux.cpp", dir);
+					linux_fcl = update_main_cpp_and_testcases_h.generate_calls_to_linux_fxs(testcase_files)
+					update_main_cpp_and_testcases_h.update_main_cpp(dir, "main_linux.cpp", linux_fcl)
 				# no need to update testcases.h
 
 				makefile_contents = create_makefile(cwe, is_dir_split)
