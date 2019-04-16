@@ -1,5 +1,4 @@
-# TODO invoke generated build files with option to continue in case of compiler
-# error - some tests have errors, particularly use of bind() syscall
+# TODO move makefile to run tests into eval directory
 cmake_minimum_required(VERSION 3.6)
 
 # grab CWE name from the directory we're in
@@ -14,7 +13,7 @@ set(CMAKE_C_FLAGS_RELEASE "-g")
 set(CMAKE_C_FLAGS_MINSIZEREL "-g")
 add_compile_options(-O0)  # hopefully adding -O0 here should turn off test optimizations
 
-# if not using cheribuild, put binaries in a top-level /bin folder
+# put binaries in a top-level /bin folder
 set(CMAKE_BINARY_DIR ../../bin/)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CWE_NAME}")
@@ -23,7 +22,7 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/support")
 set(SUPPORT_DIR ../../testcasesupport/)
 add_library(support SHARED "${SUPPORT_DIR}io.c" "${SUPPORT_DIR}std_thread.c")
 
-# TODO identify add CWE-specific support files sec 5.2
+# TODO identify add CWE-specific support files, user guide section 5.2
 
 include_directories("${SUPPORT_DIR}")
 link_libraries(support pthread m)
