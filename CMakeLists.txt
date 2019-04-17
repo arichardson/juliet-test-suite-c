@@ -1,4 +1,3 @@
-# TODO move makefile to run tests into eval directory
 cmake_minimum_required(VERSION 3.6)
 
 # grab CWE name from the directory we're in
@@ -13,20 +12,30 @@ set(CMAKE_C_FLAGS_RELEASE "-g")
 set(CMAKE_C_FLAGS_MINSIZEREL "-g")
 add_compile_options(-O0)  # hopefully adding -O0 here should turn off test optimizations
 
-# put binaries in a top-level /bin folder
-set(CMAKE_BINARY_DIR ../../bin/)
-
+# put output from all CWEs in a user-defined top-level directory
+set(TOPLEVEL_DIR "${CMAKE_SOURCE_DIR}/../..")
+# default output directory relative to the top level directory is bin, can be
+# changed by -DOUTPUT_DIR:STRING=val passed to cmake invocation
+set(OUTPUT_DIR "bin" CACHE STRING "output directory relative to top-level juliet directory")
+set(CMAKE_BINARY_DIR "${TOPLEVEL_DIR}/${OUTPUT_DIR}")
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CWE_NAME}")
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/support")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/support")
-set(SUPPORT_DIR ../../testcasesupport/)
-add_library(support SHARED "${SUPPORT_DIR}io.c" "${SUPPORT_DIR}std_thread.c")
 
-# TODO identify add CWE-specific support files, user guide section 5.2
-
+set(SUPPORT_DIR "${TOPLEVEL_DIR}/testcasesupport")
+add_library(support SHARED "${SUPPORT_DIR}/io.c" "${SUPPORT_DIR}/std_thread.c")
 include_directories("${SUPPORT_DIR}")
 link_libraries(support pthread m)
 add_definitions(-DINCLUDEMAIN)
+
+# move the script to run tests into the top-level directory
+add_custom_command(OUTPUT "${CMAKE_BINARY_DIR}/juliet-run.sh"
+                   COMMAND "${CMAKE_COMMAND}" -E copy "${TOPLEVEL_DIR}/juliet-run.sh" "${CMAKE_BINARY_DIR}/juliet-run.sh"
+                   DEPENDS "${TOPLEVEL_DIR}/juliet-run.sh"
+)
+add_custom_target(copy-run-script ALL DEPENDS "${CMAKE_BINARY_DIR}/juliet-run.sh")
+
+# TODO identify and add CWE-specific support files, user guide section 5.2
 
 # this test suite consists of many types of tests (see user's guide)
 # - tests that can be built from a single source file
