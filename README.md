@@ -1,5 +1,7 @@
 Coming soon...
 
+Note: test cases that use namespace std and the bind() function don't compile with c++11 because std::bind() is different to ::bind()
+
 # Juliet Test Suite for C/C++
 
 build Juliet test suite for unix systems - individual test case binaries, cross platform with CMake

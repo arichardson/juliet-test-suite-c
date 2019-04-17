@@ -35,9 +35,9 @@ fi
 # parameter 2: the type of tests to run (should be "good" or "bad")
 run_tests()
 {
-  DIRECTORY="$1"
-  TEST_TYPE="$2"
-  TYPE_PATH="${DIRECTORY}/${TEST_TYPE}"
+  local CWE_DIRECTORY="$1"
+  local TEST_TYPE="$2"
+  local TYPE_PATH="${CWE_DIRECTORY}/${TEST_TYPE}"
 
   echo "========== STARTING TEST ${TYPE_PATH} $(date) ==========" >> "${TYPE_PATH}.run"
   for TESTCASE in $(ls -1 "${TYPE_PATH}"); do
