@@ -82,7 +82,7 @@ CWE90_LDAP_Injection__w32_char_environment_83_goodG2B::~CWE90_LDAP_Injection__w3
             ldap_msgfree(pMessage);
         }
         /* Close the connection */
-        ldap_unbind(pLdapConnection);
+        ldap_un::bind(pLdapConnection);
     }
 }
 }

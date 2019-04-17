@@ -52,7 +52,7 @@ void badSource(char * &data)
             service.sin_family = AF_INET;
             service.sin_addr.s_addr = INADDR_ANY;
             service.sin_port = htons(LISTEN_PORT);
-            if (SOCKET_ERROR == bind(listenSocket, (struct sockaddr*)&service, sizeof(service)))
+            if (SOCKET_ERROR == ::bind(listenSocket, (struct sockaddr*)&service, sizeof(service)))
             {
                 break;
             }

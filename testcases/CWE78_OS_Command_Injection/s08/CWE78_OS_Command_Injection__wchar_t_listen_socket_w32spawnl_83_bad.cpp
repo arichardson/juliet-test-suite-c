@@ -76,7 +76,7 @@ CWE78_OS_Command_Injection__wchar_t_listen_socket_w32spawnl_83_bad::CWE78_OS_Com
             service.sin_family = AF_INET;
             service.sin_addr.s_addr = INADDR_ANY;
             service.sin_port = htons(TCP_PORT);
-            if (bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
+            if (::bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
             {
                 break;
             }

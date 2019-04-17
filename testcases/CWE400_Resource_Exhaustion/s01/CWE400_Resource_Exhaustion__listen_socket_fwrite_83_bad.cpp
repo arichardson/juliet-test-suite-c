@@ -77,7 +77,7 @@ CWE400_Resource_Exhaustion__listen_socket_fwrite_83_bad::CWE400_Resource_Exhaust
             service.sin_family = AF_INET;
             service.sin_addr.s_addr = INADDR_ANY;
             service.sin_port = htons(TCP_PORT);
-            if (bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
+            if (::bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
             {
                 break;
             }

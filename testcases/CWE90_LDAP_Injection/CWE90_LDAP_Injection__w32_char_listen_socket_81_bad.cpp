@@ -76,7 +76,7 @@ void CWE90_LDAP_Injection__w32_char_listen_socket_81_bad::action(char * data) co
             ldap_msgfree(pMessage);
         }
         /* Close the connection */
-        ldap_unbind(pLdapConnection);
+        ldap_un::bind(pLdapConnection);
     }
 }
 

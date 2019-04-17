@@ -82,7 +82,7 @@ CWE90_LDAP_Injection__w32_wchar_t_listen_socket_83_goodG2B::~CWE90_LDAP_Injectio
             ldap_msgfree(pMessage);
         }
         /* Close the connection */
-        ldap_unbind(pLdapConnection);
+        ldap_un::bind(pLdapConnection);
     }
 }
 }

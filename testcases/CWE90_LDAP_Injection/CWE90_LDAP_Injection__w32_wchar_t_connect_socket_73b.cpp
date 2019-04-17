@@ -81,7 +81,7 @@ void badSink(list<wchar_t *> dataList)
             ldap_msgfree(pMessage);
         }
         /* Close the connection */
-        ldap_unbind(pLdapConnection);
+        ldap_un::bind(pLdapConnection);
     }
 }
 
@@ -141,7 +141,7 @@ void goodG2BSink(list<wchar_t *> dataList)
             ldap_msgfree(pMessage);
         }
         /* Close the connection */
-        ldap_unbind(pLdapConnection);
+        ldap_un::bind(pLdapConnection);
     }
 }
 

@@ -75,7 +75,7 @@ CWE369_Divide_by_Zero__int_listen_socket_modulo_84_goodB2G::CWE369_Divide_by_Zer
             service.sin_family = AF_INET;
             service.sin_addr.s_addr = INADDR_ANY;
             service.sin_port = htons(TCP_PORT);
-            if (bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
+            if (::bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
             {
                 break;
             }

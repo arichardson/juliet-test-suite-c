@@ -61,7 +61,7 @@ CWE319_Cleartext_Tx_Sensitive_Info__w32_wchar_t_listen_socket_84_bad::CWE319_Cle
             service.sin_family = AF_INET;
             service.sin_addr.s_addr = INADDR_ANY;
             service.sin_port = htons(TCP_PORT);
-            if (bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
+            if (::bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
             {
                 break;
             }

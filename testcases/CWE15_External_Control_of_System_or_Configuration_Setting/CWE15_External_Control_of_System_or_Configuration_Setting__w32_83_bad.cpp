@@ -54,7 +54,7 @@ CWE15_External_Control_of_System_or_Configuration_Setting__w32_83_bad::CWE15_Ext
             service.sin_family = AF_INET;
             service.sin_addr.s_addr = INADDR_ANY;
             service.sin_port = htons(LISTEN_PORT);
-            if (SOCKET_ERROR == bind(listenSocket, (struct sockaddr*)&service, sizeof(service)))
+            if (SOCKET_ERROR == ::bind(listenSocket, (struct sockaddr*)&service, sizeof(service)))
             {
                 break;
             }

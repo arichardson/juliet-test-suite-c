@@ -86,7 +86,7 @@ void bad()
                 service.sin_family = AF_INET;
                 service.sin_addr.s_addr = INADDR_ANY;
                 service.sin_port = htons(TCP_PORT);
-                if (bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
+                if (::bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
                 {
                     break;
                 }
@@ -191,7 +191,7 @@ static void goodB2G1()
                 service.sin_family = AF_INET;
                 service.sin_addr.s_addr = INADDR_ANY;
                 service.sin_port = htons(TCP_PORT);
-                if (bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
+                if (::bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
                 {
                     break;
                 }
@@ -297,7 +297,7 @@ static void goodB2G2()
                 service.sin_family = AF_INET;
                 service.sin_addr.s_addr = INADDR_ANY;
                 service.sin_port = htons(TCP_PORT);
-                if (bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
+                if (::bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
                 {
                     break;
                 }

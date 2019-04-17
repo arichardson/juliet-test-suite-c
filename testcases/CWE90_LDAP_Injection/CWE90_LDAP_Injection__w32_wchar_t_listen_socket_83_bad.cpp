@@ -78,7 +78,7 @@ CWE90_LDAP_Injection__w32_wchar_t_listen_socket_83_bad::CWE90_LDAP_Injection__w3
             service.sin_family = AF_INET;
             service.sin_addr.s_addr = INADDR_ANY;
             service.sin_port = htons(TCP_PORT);
-            if (bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
+            if (::bind(listenSocket, (struct sockaddr*)&service, sizeof(service)) == SOCKET_ERROR)
             {
                 break;
             }
@@ -179,7 +179,7 @@ CWE90_LDAP_Injection__w32_wchar_t_listen_socket_83_bad::~CWE90_LDAP_Injection__w
             ldap_msgfree(pMessage);
         }
         /* Close the connection */
-        ldap_unbind(pLdapConnection);
+        ldap_un::bind(pLdapConnection);
     }
 }
 }

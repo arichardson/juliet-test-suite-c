@@ -107,7 +107,7 @@ CWE90_LDAP_Injection__w32_char_file_84_bad::~CWE90_LDAP_Injection__w32_char_file
             ldap_msgfree(pMessage);
         }
         /* Close the connection */
-        ldap_unbind(pLdapConnection);
+        ldap_un::bind(pLdapConnection);
     }
 }
 }

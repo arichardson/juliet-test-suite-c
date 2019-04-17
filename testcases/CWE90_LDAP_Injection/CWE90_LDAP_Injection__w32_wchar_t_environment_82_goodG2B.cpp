@@ -76,7 +76,7 @@ void CWE90_LDAP_Injection__w32_wchar_t_environment_82_goodG2B::action(wchar_t * 
             ldap_msgfree(pMessage);
         }
         /* Close the connection */
-        ldap_unbind(pLdapConnection);
+        ldap_un::bind(pLdapConnection);
     }
 }
 
