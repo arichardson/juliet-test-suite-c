@@ -1,4 +1,8 @@
+Coming soon...
+
 # Juliet Test Suite for C/C++
+
+build Juliet test suite for unix systems - individual test case binaries, cross platform with CMake
 
 This is the Juliet Test Suite for C/C++ 1.3 from https://samate.nist.gov/SARD/testsuite.php
 with an added CMake build system to allow it to compile for CHERI.
