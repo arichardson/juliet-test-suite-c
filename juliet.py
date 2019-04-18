@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 
 
-import sys, os, re, argparse, shutil, subprocess
+import sys, os, re, argparse, shutil, subprocess, pathlib
 
 
-root_dir = sys.path[0]
+root_dir = str(pathlib.Path(__file__).parent)
 
 
 def juliet_print(string):
