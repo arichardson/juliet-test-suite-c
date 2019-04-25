@@ -23,7 +23,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/support")
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/support")
 
 set(SUPPORT_DIR "${TOPLEVEL_DIR}/testcasesupport")
-add_library(support SHARED "${SUPPORT_DIR}/io.c" "${SUPPORT_DIR}/std_thread.c")
+add_library(support STATIC "${SUPPORT_DIR}/io.c" "${SUPPORT_DIR}/std_thread.c")
 include_directories("${SUPPORT_DIR}")
 link_libraries(support pthread m)
 add_definitions(-DINCLUDEMAIN)
