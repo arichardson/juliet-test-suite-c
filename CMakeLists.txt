@@ -12,15 +12,23 @@ set(CMAKE_C_FLAGS_RELEASE "-g")
 set(CMAKE_C_FLAGS_MINSIZEREL "-g")
 add_compile_options(-O0)  # hopefully adding -O0 here should turn off test optimizations
 
-# put output from all CWEs in a user-defined top-level directory
+
+option(PLACE_OUTPUT_IN_TOPLEVEL_DIR "Use TOPLEVEL_DIR/bin as the output for all test binaries" ON)
 set(TOPLEVEL_DIR "${CMAKE_SOURCE_DIR}/../..")
-# default output directory relative to the top level directory is bin, can be
-# changed by -DOUTPUT_DIR:STRING=val passed to cmake invocation
-set(OUTPUT_DIR "bin" CACHE STRING "output directory relative to top-level juliet directory")
-set(CMAKE_BINARY_DIR "${TOPLEVEL_DIR}/${OUTPUT_DIR}")
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CWE_NAME}")
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/support")
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/support")
+if (PLACE_OUTPUT_IN_TOPLEVEL_DIR)
+    # put output from all CWEs in a user-defined top-level directory
+    # default output directory relative to the top level directory is bin, can be
+    # changed by -DOUTPUT_DIR:STRING=val passed to cmake invocation
+    set(OUTPUT_DIR "bin" CACHE STRING "output directory relative to top-level juliet directory")
+    set(CMAKE_BINARY_DIR "${TOPLEVEL_DIR}/${OUTPUT_DIR}")
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/${CWE_NAME}")
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/support")
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/support")
+else()
+    set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
+    set(CMAKE_LIBRARY_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+    set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/lib")
+endif()
 
 set(SUPPORT_DIR "${TOPLEVEL_DIR}/testcasesupport")
 add_library(support STATIC "${SUPPORT_DIR}/io.c" "${SUPPORT_DIR}/std_thread.c")
