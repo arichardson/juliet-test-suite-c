@@ -1,34 +1,32 @@
 #!/bin/sh
 
-# the first parameter of this script is either an integer or the string "all".
-# if given a number, it will target a subdirectory *in its directory* that
-# contains test cases correspding to that CWE number.  if given "all", it will
-# target all subdirectories *in its directory* containing CWE test cases.
+# the first parameter specifies a non-default timeout duration
+# the second parameter specifies the path of a library to LD_CHERI_PRELOAD when running test cases
 
-# the second parameter is optional and specifies a timeout duration. the
-# default value is .01 seconds.
+# this script will run all good and bad tests in the bin subdirectory and write
+# the names of the tests and their return codes into the files "good.run" and
+# "bad.run". all tests are run with a timeout so that tests requiring input
+# terminate quickly with return code 124.
 
-# this script will run all good and bad tests in the targeted subdirectories
-# and write the names of the tests and their return codes into the files
-# "good.run" and "bad.run", both located in the subdirectories. all tests are
-# run with a timeout so that tests requiring input terminate quickly with
-# return code 124.
-
-ulimit -c 0 # TODO no core dumps for now
+ulimit -c 0
 
 SCRIPT_DIR=$(dirname $(realpath "$0"))
-TIMEOUT=".01s"
+TIMEOUT="1s"
+PRELOAD_PATH=""
 
-if [ $# -lt 1 ]
+if [ $# -ge 1 ]
 then
-  echo "need to specify target - see source comments for help"
-  exit
+  TIMEOUT="$1"
 fi
 
-TARGET="$1"
 if [ $# -ge 2 ]
 then
-  TIMEOUT="$2"
+  PRELOAD_PATH="$2"
+  if [ ! -f "${PRELOAD_PATH}" ]
+  then
+    echo "preload path ${PRELOAD_PATH} does not exist - not running tests"
+    exit 1
+  fi
 fi
 
 # parameter 1: the CWE directory corresponding to the tests
@@ -45,29 +43,19 @@ run_tests()
   echo "========== STARTING TEST ${TYPE_PATH} $(date) ==========" >> "${TYPE_PATH}.run"
   for TESTCASE in $(ls -1 "${TYPE_PATH}"); do
     local TESTCASE_PATH="${TYPE_PATH}/${TESTCASE}"
-    timeout "${TIMEOUT}" "${TESTCASE_PATH}" 0 # timeout requires an argument after the command
+
+    if [ ! -z "${PRELOAD_PATH}" ]
+    then
+      timeout "${TIMEOUT}" env LD_CHERI_PRELOAD="${PRELOAD_PATH}" "${TESTCASE_PATH}"
+    else
+      timeout "${TIMEOUT}" "${TESTCASE_PATH}"
+    fi
+
     echo "${TESTCASE_PATH} $?" >> "${TYPE_PATH}.run"
   done
 
   cd "${PREV_CWD}"
 }
 
-if [ "${TARGET}" = "all" ]
-then
-  for DIRECTORY in $(ls -1 "${SCRIPT_DIR}"); do
-    if [ $(expr "${DIRECTORY}" : "^CWE[0-9][0-9]*$") -ne 0 ] # make sure this is a CWE directory
-    then
-      FULL_PATH="${SCRIPT_DIR}/${DIRECTORY}"
-      run_tests "${FULL_PATH}" "good"
-      run_tests "${FULL_PATH}" "bad"
-    fi
-  done
-elif [ -d "${SCRIPT_DIR}/CWE${TARGET}" ]
-then
-  FULL_PATH="${SCRIPT_DIR}/CWE${TARGET}"
-  run_tests "${FULL_PATH}" "good"
-  run_tests "${FULL_PATH}" "bad"
-else
-  echo "specified target did not correspond to a built CWE testcase directory - see source comments for help"
-  exit
-fi
+run_tests "${SCRIPT_DIR}/bin" "good"
+run_tests "${SCRIPT_DIR}/bin" "bad"
