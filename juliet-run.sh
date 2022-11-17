@@ -13,6 +13,7 @@ ulimit -c 0
 SCRIPT_DIR=$(dirname $(realpath "$0"))
 TIMEOUT="1s"
 PRELOAD_PATH=""
+INPUT_FILE="/tmp/in.txt"
 
 if [ $# -ge 1 ]
 then
@@ -46,9 +47,9 @@ run_tests()
 
     if [ ! -z "${PRELOAD_PATH}" ]
     then
-      timeout "${TIMEOUT}" env LD_CHERI_PRELOAD="${PRELOAD_PATH}" "${TESTCASE_PATH}"
+      timeout "${TIMEOUT}" env LD_CHERI_PRELOAD="${PRELOAD_PATH}" "${TESTCASE_PATH}" < "${INPUT_FILE}"
     else
-      timeout "${TIMEOUT}" "${TESTCASE_PATH}"
+      timeout "${TIMEOUT}" "${TESTCASE_PATH}" < "${INPUT_FILE}"
     fi
 
     echo "${TESTCASE_PATH} $?" >> "${TYPE_PATH}.run"
