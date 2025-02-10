@@ -15,14 +15,14 @@ TIMEOUT="1s"
 PRELOAD_PATH=""
 INPUT_FILE="/tmp/in.txt"
 
-if [ $# -ge 1 ]
-then
-  TIMEOUT="$1"
-fi
-
 if [ $# -ge 2 ]
 then
-  PRELOAD_PATH="$2"
+  TIMEOUT="$2"
+fi
+
+if [ $# -ge 3 ]  # actually this argument is not used when juliet.py executes this script via popen() without passing the additional PRELOAD_PATH argument
+then
+  PRELOAD_PATH="$3"
   if [ ! -f "${PRELOAD_PATH}" ]
   then
     echo "preload path ${PRELOAD_PATH} does not exist - not running tests"
@@ -58,5 +58,5 @@ run_tests()
   cd "${PREV_CWD}"
 }
 
-run_tests "${SCRIPT_DIR}/bin" "good"
-run_tests "${SCRIPT_DIR}/bin" "bad"
+run_tests "${SCRIPT_DIR}/CWE${1}" "good" # when the run() is called by juliet.py, script_dir is already in the bin directory and cannot be spliced with bin as a subdirectory , so $1 is actually is CWE-ID directory
+run_tests "${SCRIPT_DIR}/CWE${1}" "bad"
